@@ -1,0 +1,114 @@
+// Definição da estrutura para a carta do Super Trunfo
+struct carta {
+    char nome_pais[50];
+    float populacao;
+    float area;
+    float pib;
+    float pontos_turisticos;
+    float densidade_demografica;
+};
+
+// Protótipos das funções
+void exibir_menu(int escolha_anterior);
+char* obter_nome_atributo(int opcao);
+
+int main() {
+    // Declaração de duas variáveis do tipo struct carta, pré-carregadas
+    struct carta carta1 = {"Brasil", 215.4, 8515767.0, 1.92, 70.0};
+    struct carta carta2 = {"Argentina", 45.8, 2780400.0, 0.63, 55.0};
+
+    int escolha1, escolha2;
+    float soma1, soma2;
+
+    // Calcula a densidade demográfica para ambas as cartas
+    carta1.densidade_demografica = carta1.populacao / carta1.area;
+    carta2.densidade_demografica = carta2.populacao / carta2.area;
+
+    // --- ESCOLHA DO PRIMEIRO ATRIBUTO ---
+    printf("--- Batalha de Super Trunfo ---\n\n");
+    exibir_menu(0); // Exibe o menu completo
+    printf("Escolha o PRIMEIRO atributo para a batalha: ");
+    scanf("%d", &escolha1);
+
+    // Valida a primeira escolha
+    if (escolha1 < 1 || escolha1 > 5) {
+        printf("\nOpcao invalida. Reinicie o programa e escolha um numero de 1 a 5.\n");
+        return 1;
+    }
+
+    // --- ESCOLHA DO SEGUNDO ATRIBUTO (DINÂMICO) ---
+    printf("\n--- Escolha do Segundo Atributo ---\n");
+    exibir_menu(escolha1); // Exibe o menu com a opcao 1 removida
+    printf("Escolha o SEGUNDO atributo para a batalha: ");
+    scanf("%d", &escolha2);
+
+    // Valida a segunda escolha, garantindo que nao seja a mesma que a primeira
+    if (escolha2 < 1 || escolha2 > 5 || escolha2 == escolha1) {
+        printf("\nOpcao invalida ou ja escolhida. Reinicie o programa.\n");
+        return 1;
+    }
+
+    printf("\n--- Resultados da Batalha ---\n\n");
+
+    // --- COMPARACAO E CALCULO DA SOMA ---
+    printf("Atributo 1: %s\n", obter_nome_atributo(escolha1));
+    printf("Carta 1 (%s): %.2f\n", carta1.nome_pais, *(&carta1.populacao + escolha1 - 1));
+    printf("Carta 2 (%s): %.2f\n", carta2.nome_pais, *(&carta2.populacao + escolha1 - 1));
+    
+    // Tratamento da densidade demográfica com operador ternário
+    float valor1_atrib1 = *(&carta1.populacao + escolha1 - 1);
+    float valor2_atrib1 = *(&carta2.populacao + escolha1 - 1);
+    char* vencedor_atrib1 = (escolha1 == 5) ? 
+                           ((valor1_atrib1 < valor2_atrib1) ? carta1.nome_pais : carta2.nome_pais) :
+                           ((valor1_atrib1 > valor2_atrib1) ? carta1.nome_pais : carta2.nome_pais);
+    printf("Vencedor do Atributo 1: %s\n\n", vencedor_atrib1);
+
+    printf("Atributo 2: %s\n", obter_nome_atributo(escolha2));
+    printf("Carta 1 (%s): %.2f\n", carta1.nome_pais, *(&carta1.populacao + escolha2 - 1));
+    printf("Carta 2 (%s): %.2f\n", carta2.nome_pais, *(&carta2.populacao + escolha2 - 1));
+
+    float valor1_atrib2 = *(&carta1.populacao + escolha2 - 1);
+    float valor2_atrib2 = *(&carta2.populacao + escolha2 - 1);
+    char* vencedor_atrib2 = (escolha2 == 5) ? 
+                           ((valor1_atrib2 < valor2_atrib2) ? carta1.nome_pais : carta2.nome_pais) :
+                           ((valor1_atrib2 > valor2_atrib2) ? carta1.nome_pais : carta2.nome_pais);
+    printf("Vencedor do Atributo 2: %s\n\n", vencedor_atrib2);
+
+    // SOMA TOTAL
+    soma1 = valor1_atrib1 + valor1_atrib2;
+    soma2 = valor2_atrib1 + valor2_atrib2;
+
+    printf("--- Soma Total ---\n");
+    printf("%s: %.2f\n", carta1.nome_pais, soma1);
+    printf("%s: %.2f\n", carta2.nome_pais, soma2);
+
+    // DETERMINAR VENCEDOR FINAL COM OPERADOR TERNÁRIO
+    if (soma1 == soma2) {
+        printf("\nResultado Final: Empate!\n");
+    } else {
+        printf("\nResultado Final: O vencedor da rodada e: %s\n", (soma1 > soma2) ? carta1.nome_pais : carta2.nome_pais);
+    }
+
+    return 0;
+}
+
+// Funções Auxiliares
+void exibir_menu(int escolha_anterior) {
+    printf("Escolha o atributo numerico:\n");
+    if (escolha_anterior != 1) printf("1. Populacao (milhoes)\n");
+    if (escolha_anterior != 2) printf("2. Area (km^2)\n");
+    if (escolha_anterior != 3) printf("3. PIB (bilhoes de USD)\n");
+    if (escolha_anterior != 4) printf("4. Pontos Turisticos\n");
+    if (escolha_anterior != 5) printf("5. Densidade Demografica (hab/km^2)\n");
+}
+
+char* obter_nome_atributo(int opcao) {
+    switch (opcao) {
+        case 1: return "Populacao";
+        case 2: return "Area";
+        case 3: return "PIB";
+        case 4: return "Pontos Turisticos";
+        case 5: return "Densidade Demografica";
+        default: return "Desconhecido";
+    }
+}
